@@ -1,0 +1,17 @@
+model Job {
+  id          String   @id @default(cuid())
+  title       String
+  description String
+  location    String
+  department  String?
+  isPublished Boolean  @default(true)
+  employerId  String
+  employer    User     @relation("EmployerJobs", fields: [employerId], references: [id], onDelete: Cascade)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  applications JobApplication[]
+
+  @@index([location])
+  @@index([isPublished])
+}
