@@ -11,7 +11,7 @@ export function HomeSearchForm() {
   const [keyword, setKeyword] = useState("");
   const [location, setLocation] = useState("");
 
-  function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  const handleSubmit = (event: React.SubmitEvent<HTMLFormElement>) => {
     event.preventDefault();
     const params = new URLSearchParams();
     if (keyword) params.set("keyword", keyword);
