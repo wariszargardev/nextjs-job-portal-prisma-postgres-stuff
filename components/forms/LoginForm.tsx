@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { signIn } from "next-auth/react";
+import { signIn, getSession } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,7 +32,13 @@ export function LoginForm() {
       return;
     }
 
-    router.push(searchParams.get("callbackUrl") ?? "/");
+    const callbackUrl = searchParams.get("callbackUrl");
+    if (callbackUrl) {
+      router.push(callbackUrl);
+    } else {
+      const session = await getSession();
+      router.push(session?.user?.role === "ADMIN" ? "/admin/imcrm/document-types" : "/");
+    }
     router.refresh();
   }
 

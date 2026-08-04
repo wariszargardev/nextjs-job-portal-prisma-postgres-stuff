@@ -28,6 +28,10 @@ export async function Navbar() {
                 <Link href="/employer/jobs" className="hover:text-brand-600">
                   My jobs
                 </Link>
+              ) : session.user.role === "ADMIN" ? (
+                <Link href="/admin/imcrm/document-types" className="hover:text-brand-600">
+                  Document types
+                </Link>
               ) : (
                 <Link href="/candidate/applications" className="hover:text-brand-600">
                   My applications
