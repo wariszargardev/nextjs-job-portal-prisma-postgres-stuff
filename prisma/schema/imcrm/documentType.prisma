@@ -1,0 +1,31 @@
+// imcrm: ported from blanka's `document_types` table (QuoteDocumentService::getDocumentTypes).
+model DocumentType {
+  id          BigInt  @id @default(autoincrement())
+  code        String  @unique
+  text        String
+  description String?
+  isActive    Boolean @default(true)
+
+  quoteTypeId Int?
+  quoteType   QuoteType? @relation(fields: [quoteTypeId], references: [id])
+
+  folderPath                   String?
+  acceptedFiles                String?
+  maxFiles                     Int     @default(1)
+  maxSize                      Int     @default(5)
+  isRequired                   Boolean @default(false)
+  sendToCustomer               Boolean @default(false)
+  sortOrder                    Int?
+  receiveFromCustomer          Boolean @default(false)
+  category                     String  @default("QUOTE")
+  isRequiredForSendPolicy      Boolean @default(false)
+  businessTypeOfInsuranceId    BigInt?
+  businessTypeOfCustomer       String?
+  toolTip                      String?
+  registrationType             String?
+  vehicleUse                   String?
+  isRestrictedInternalDocument Boolean @default(false)
+
+  @@index([isActive])
+  @@index([quoteTypeId])
+}

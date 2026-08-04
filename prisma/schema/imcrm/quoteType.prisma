@@ -1,0 +1,17 @@
+// imcrm: ported from blanka's `quote_type` table (QuoteDocumentService dependency).
+model QuoteType {
+  id        Int      @id @default(autoincrement())
+  shortCode String?
+  code      String?
+  text      String?
+  textAr    String?
+  isActive  Boolean  @default(true)
+  sortOrder Int?
+  isDeleted Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  documentTypes DocumentType[]
+
+  @@index([isActive])
+}

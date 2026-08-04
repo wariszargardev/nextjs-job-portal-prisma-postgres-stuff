@@ -1,0 +1,417 @@
+{
+  "info": {
+    "_postman_id": "e3d2a1c4-5f6b-4a7c-8d9e-0f1a2b3c4d5e",
+    "name": "Afia Job Portal (incl. imcrm)",
+    "description": "All API endpoints for the Next.js job portal, including the imcrm document-types module. Run the \"Auth\" folder first (Get CSRF Token, then the matching Login request) to establish a session cookie before calling protected endpoints — same credentials-provider flow the app's own login form uses.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Auth",
+      "item": [
+        {
+          "name": "Get CSRF Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/auth/csrf", "host": ["{{baseUrl}}"], "path": ["api", "auth", "csrf"] }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "const data = pm.response.json();",
+                  "pm.environment.set('csrfToken', data.csrfToken);",
+                  "pm.test('csrf token received', () => pm.expect(data.csrfToken).to.be.a('string'));"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login as Admin",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "csrfToken", "value": "{{csrfToken}}" },
+                { "key": "email", "value": "{{adminEmail}}" },
+                { "key": "password", "value": "{{adminPassword}}" },
+                { "key": "redirect", "value": "false" },
+                { "key": "json", "value": "true" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/callback/credentials",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "callback", "credentials"]
+            },
+            "description": "Run \"Get CSRF Token\" immediately before this. On success, Postman's cookie jar stores the session cookie for {{baseUrl}} — subsequent requests in this environment are then authenticated as ADMIN."
+          }
+        },
+        {
+          "name": "Login as Employer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "csrfToken", "value": "{{csrfToken}}" },
+                { "key": "email", "value": "{{employerEmail}}" },
+                { "key": "password", "value": "{{employerPassword}}" },
+                { "key": "redirect", "value": "false" },
+                { "key": "json", "value": "true" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/callback/credentials",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "callback", "credentials"]
+            },
+            "description": "Run \"Get CSRF Token\" immediately before this."
+          }
+        },
+        {
+          "name": "Login as Candidate",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": {
+              "mode": "urlencoded",
+              "urlencoded": [
+                { "key": "csrfToken", "value": "{{csrfToken}}" },
+                { "key": "email", "value": "{{candidateEmail}}" },
+                { "key": "password", "value": "{{candidatePassword}}" },
+                { "key": "redirect", "value": "false" },
+                { "key": "json", "value": "true" }
+              ]
+            },
+            "url": {
+              "raw": "{{baseUrl}}/api/auth/callback/credentials",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "auth", "callback", "credentials"]
+            },
+            "description": "Run \"Get CSRF Token\" immediately before this."
+          }
+        },
+        {
+          "name": "Get Session",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/auth/session", "host": ["{{baseUrl}}"], "path": ["api", "auth", "session"] },
+            "description": "Confirms which user/role the current cookie session belongs to."
+          }
+        },
+        {
+          "name": "Sign Out",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/x-www-form-urlencoded" }],
+            "body": { "mode": "urlencoded", "urlencoded": [{ "key": "csrfToken", "value": "{{csrfToken}}" }] },
+            "url": { "raw": "{{baseUrl}}/api/auth/signout", "host": ["{{baseUrl}}"], "path": ["api", "auth", "signout"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Jobs",
+      "item": [
+        {
+          "name": "List Jobs (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs?keyword=&location=&page=1&perPage=10",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs"],
+              "query": [
+                { "key": "keyword", "value": "" },
+                { "key": "location", "value": "" },
+                { "key": "page", "value": "1" },
+                { "key": "perPage", "value": "10" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Get Job (public)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/jobs/{{jobId}}", "host": ["{{baseUrl}}"], "path": ["api", "jobs", "{{jobId}}"] }
+          }
+        },
+        {
+          "name": "Create Job (Employer)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"Senior Backend Engineer\",\n  \"description\": \"Design and scale our Prisma/Postgres data layer.\",\n  \"location\": \"Remote\",\n  \"department\": \"Engineering\",\n  \"isPublished\": true\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/jobs", "host": ["{{baseUrl}}"], "path": ["api", "jobs"] },
+            "description": "Requires an EMPLOYER session (run Auth > Login as Employer first)."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('jobId', data.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Job (Employer)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"isPublished\": false\n}" },
+            "url": { "raw": "{{baseUrl}}/api/jobs/{{jobId}}", "host": ["{{baseUrl}}"], "path": ["api", "jobs", "{{jobId}}"] },
+            "description": "Requires an EMPLOYER session, and must be the job's owner."
+          }
+        },
+        {
+          "name": "Delete Job (Employer)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/jobs/{{jobId}}", "host": ["{{baseUrl}}"], "path": ["api", "jobs", "{{jobId}}"] },
+            "description": "Requires an EMPLOYER session, and must be the job's owner."
+          }
+        },
+        {
+          "name": "List Applicants for Job (Employer)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/jobs/{{jobId}}/applications",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "jobs", "{{jobId}}", "applications"]
+            },
+            "description": "Requires an EMPLOYER session, and must be the job's owner."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Applications",
+      "item": [
+        {
+          "name": "List My Applications (Candidate)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{baseUrl}}/api/applications", "host": ["{{baseUrl}}"], "path": ["api", "applications"] },
+            "description": "Requires a CANDIDATE session."
+          }
+        },
+        {
+          "name": "Apply to Job (Candidate)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"jobId\": \"{{jobId}}\",\n  \"coverNote\": \"I'd love to work on this.\"\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/applications", "host": ["{{baseUrl}}"], "path": ["api", "applications"] },
+            "description": "Requires a CANDIDATE session."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('appId', data.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Update Application Status (Employer)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"status\": \"REVIEWING\"\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/api/applications/{{appId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "applications", "{{appId}}"]
+            },
+            "description": "Requires an EMPLOYER session, and must own the job the application belongs to."
+          }
+        }
+      ]
+    },
+    {
+      "name": "Upload",
+      "item": [
+        {
+          "name": "Upload Resume (Candidate)",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "formdata",
+              "formdata": [{ "key": "resume", "type": "file", "src": [] }]
+            },
+            "url": { "raw": "{{baseUrl}}/api/upload", "host": ["{{baseUrl}}"], "path": ["api", "upload"] },
+            "description": "Requires a CANDIDATE session. PDF/DOC/DOCX only, max 5MB. Attach a file to the \"resume\" form field before sending."
+          }
+        }
+      ]
+    },
+    {
+      "name": "imcrm - Document Types (Read Path)",
+      "item": [
+        {
+          "name": "Get Quote Document Types",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/imcrm/quotes/{{quoteType}}/document-types?businessTypeOfInsurance=&businessTypeOfCustomer=&quoteTypeCode=&registrationType=&vehicleUse=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "imcrm", "quotes", "{{quoteType}}", "document-types"],
+              "query": [
+                { "key": "businessTypeOfInsurance", "value": "" },
+                { "key": "businessTypeOfCustomer", "value": "" },
+                { "key": "quoteTypeCode", "value": "" },
+                { "key": "registrationType", "value": "" },
+                { "key": "vehicleUse", "value": "" }
+              ]
+            },
+            "description": "Public read path — resolves document types for a given quote type (e.g. \"car\"), filtered by BOR permission from the current session if any. quoteType is matched against quote_type.code/shortCode."
+          }
+        },
+        {
+          "name": "Get BOR Document Types (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/imcrm/bor/document-types?quoteTypeId={{quoteTypeId}}&businessTypeOfInsurance=&businessTypeOfCustomer=&quoteTypeCode=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "imcrm", "bor", "document-types"],
+              "query": [
+                { "key": "quoteTypeId", "value": "{{quoteTypeId}}" },
+                { "key": "businessTypeOfInsurance", "value": "" },
+                { "key": "businessTypeOfCustomer", "value": "" },
+                { "key": "quoteTypeCode", "value": "" }
+              ]
+            },
+            "description": "Requires an ADMIN session (stand-in for blanka's BOR_DOCUMENT_UPLOAD permission — see lib/imcrm/auth/hasBorPermission.ts). quoteTypeId is required."
+          }
+        }
+      ]
+    },
+    {
+      "name": "imcrm - Document Types (Admin CRUD)",
+      "item": [
+        {
+          "name": "List Document Types (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/imcrm/document-types?page=1&pageSize=20&search=&category=&quoteTypeId=&isActive=",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "imcrm", "document-types"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "pageSize", "value": "20" },
+                { "key": "search", "value": "" },
+                { "key": "category", "value": "" },
+                { "key": "quoteTypeId", "value": "" },
+                { "key": "isActive", "value": "" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "Create Document Type (Admin)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"code\": \"POSTMAN_TEST\",\n  \"text\": \"Postman test document\",\n  \"category\": \"QUOTE\",\n  \"quoteTypeId\": {{quoteTypeId}},\n  \"isActive\": true,\n  \"isRequired\": false,\n  \"maxFiles\": 1,\n  \"maxSize\": 5\n}"
+            },
+            "url": { "raw": "{{baseUrl}}/api/imcrm/document-types", "host": ["{{baseUrl}}"], "path": ["api", "imcrm", "document-types"] },
+            "description": "Requires an ADMIN session. code must be unique."
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 201) {",
+                  "  const data = pm.response.json();",
+                  "  pm.environment.set('documentTypeId', data.id);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Get Document Type (Admin)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/imcrm/document-types/{{documentTypeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "imcrm", "document-types", "{{documentTypeId}}"]
+            }
+          }
+        },
+        {
+          "name": "Update Document Type (Admin)",
+          "request": {
+            "method": "PATCH",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": { "mode": "raw", "raw": "{\n  \"text\": \"Postman test document (updated)\",\n  \"isActive\": false\n}" },
+            "url": {
+              "raw": "{{baseUrl}}/api/imcrm/document-types/{{documentTypeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "imcrm", "document-types", "{{documentTypeId}}"]
+            },
+            "description": "Requires an ADMIN session."
+          }
+        },
+        {
+          "name": "Delete Document Type (Admin)",
+          "request": {
+            "method": "DELETE",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrl}}/api/imcrm/document-types/{{documentTypeId}}",
+              "host": ["{{baseUrl}}"],
+              "path": ["api", "imcrm", "document-types", "{{documentTypeId}}"]
+            },
+            "description": "Requires an ADMIN session. Hard delete — no soft-delete flag on this table yet."
+          }
+        }
+      ]
+    }
+  ]
+}
