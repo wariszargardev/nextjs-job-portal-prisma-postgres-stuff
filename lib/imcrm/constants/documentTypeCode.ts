@@ -1,0 +1,38 @@
+// imcrm: ported from blanka's DocumentTypeCode enum.
+export const DocumentTypeCode = {
+  BAL: "BAL",
+  BAL_BIKE: "BAL_BIKE",
+  BAL_TRVL: "BAL_TRVL",
+  BAL_HOME: "BAL_HOME",
+  BAL_HLTH: "BAL_HLTH",
+  BAL_YCHT: "BAL_YCHT",
+  BAL_CYCLE: "BAL_CYCLE",
+  BAL_LIFE: "BAL_LIFE",
+  BAL_PET: "BAL_PET",
+  BAL_BS: "BAL_BS",
+  BUS_BAL: "BUS_BAL",
+  GM_BOL: "GM_BOL",
+  GMQPD: "GMQPD",
+  GMQPDR: "GMQPDR",
+  GMQDPDR: "GMQDPDR",
+  PPR: "PPR",
+  CLPD: "CLPD",
+  CLPDR: "CLPDR",
+  CLDPDR: "CLDPDR",
+  AUDIT: "AUDIT",
+} as const;
+
+export const BOR_ONLY_CODES: string[] = [
+  DocumentTypeCode.BAL,
+  DocumentTypeCode.BAL_BIKE,
+  DocumentTypeCode.BAL_TRVL,
+  DocumentTypeCode.BAL_HOME,
+  DocumentTypeCode.BAL_HLTH,
+  DocumentTypeCode.BAL_YCHT,
+  DocumentTypeCode.BAL_CYCLE,
+  DocumentTypeCode.BAL_LIFE,
+  DocumentTypeCode.BAL_PET,
+  DocumentTypeCode.BAL_BS,
+  DocumentTypeCode.BUS_BAL,
+  DocumentTypeCode.GM_BOL,
+];
