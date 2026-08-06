@@ -1,5 +1,6 @@
 import { posts } from "@/app/lib/post"
 import Link from "next/link"
+import LikeButton from "../componennts/LikeButton"
 
 export default async function Posts(){
     await new Promise((r) => setTimeout(r, 1000))
@@ -13,6 +14,7 @@ export default async function Posts(){
                         <h1>{post.title}</h1>
                         <p>{post.description}</p>
                         <Link href={`posts/${post.id}`} className="cursor-pointer">View Details</Link>
+                        <LikeButton post={post} />
                         <hr/>
                     </div>
                 ))
