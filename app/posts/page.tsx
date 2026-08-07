@@ -2,6 +2,7 @@ import { posts } from "@/app/lib/post"
 import Link from "next/link"
 import LikeButton from "../componennts/LikeButton"
 import SharedCount from "../componennts/SharedCounts"
+import BookMarkButton from "../componennts/BookmarkButton"
 
 export default async function Posts(){
     await new Promise((r) => setTimeout(r, 1000))
@@ -18,6 +19,7 @@ export default async function Posts(){
                         <Link href={`posts/${post.id}`} className="cursor-pointer">View Details</Link>
                         <LikeButton post={post} />
                         <SharedCount post={post} />
+                        <BookMarkButton post={post} />
                         <hr/>
                     </div>
                 ))

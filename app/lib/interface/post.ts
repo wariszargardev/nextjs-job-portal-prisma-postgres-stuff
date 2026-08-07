@@ -1,0 +1,7 @@
+export interface Post {
+    id: number,
+    title: string
+    description: string
+    sharedCount: number,
+    bookMark: boolean
+}
