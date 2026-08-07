@@ -3,5 +3,6 @@ export interface Post {
     title: string
     description: string
     sharedCount: number,
-    bookMark: boolean
+    bookMark: boolean,
+    commentCount: number
 }
