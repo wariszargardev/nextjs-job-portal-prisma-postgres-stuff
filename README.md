@@ -1,5 +1,49 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## Database (Prisma + Postgres)
+
+This project uses [Prisma](https://www.prisma.io) with PostgreSQL.
+
+- Schema: [prisma/schema.prisma](prisma/schema.prisma) — this app's model is `Post` (`title`, `description`, `sharedCount`, `bookMark`, `commentCount`). The other models (`User`, `Job`, `JobApplication`, `QuoteType`, `DocumentType`) belong to an existing system sharing this database — introspected with `prisma db pull` so `db push` never drops them. Don't run `db push --accept-data-loss` here.
+- Config: [prisma.config.ts](prisma.config.ts) — reads `DATABASE_URL` from `.env`.
+- Client: [lib/prisma.ts](lib/prisma.ts) — import `prisma` from here anywhere in the app, don't instantiate `PrismaClient` yourself.
+
+```ts
+import { prisma } from "@/lib/prisma";
+
+const posts = await prisma.post.findMany();
+```
+
+Set `DATABASE_URL` in `.env` before running any command below.
+
+### Generate the client
+
+Run this after cloning, after `pnpm install`, or any time `prisma/schema.prisma` changes:
+
+```bash
+pnpm db:generate
+```
+
+(`pnpm install` also runs this automatically via the `postinstall` script.)
+
+### Push schema changes to the database
+
+After editing a model in `prisma/schema.prisma`, push the change to the database:
+
+```bash
+pnpm db:push
+```
+
+This syncs the database to match the schema. It also regenerates the client, so a separate `db:generate` isn't needed afterward.
+
+### Seed sample data
+
+Insert a handful of sample `Post` rows ([prisma/seed.ts](prisma/seed.ts)):
+
+```bash
+pnpm db:seed
+```
+
 ## Getting Started
 
 First, run the development server:
