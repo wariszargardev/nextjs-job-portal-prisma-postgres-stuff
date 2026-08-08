@@ -10,9 +10,11 @@ export default function SharedCount({post}: {post: Post}){
         setSharedCounts(sharedCounts + 1)
     }
     return(
-        <div>
-            <h1>Post Shared Count - {sharedCounts}</h1>
-            <button onClick={sharedPost}>Post shared </button>
-        </div>
+        <button
+            onClick={sharedPost}
+            className="inline-flex items-center gap-1 rounded-full border border-neutral-200 px-3 py-1 text-sm text-neutral-600 transition hover:bg-neutral-50 dark:border-neutral-800 dark:text-neutral-400 dark:hover:bg-neutral-800"
+        >
+            🔁 Share ({sharedCounts})
+        </button>
     )
 }
