@@ -1,8 +1,8 @@
 import Link from "next/link"
-import LikeButton from "../componennts/LikeButton"
-import SharedCount from "../componennts/SharedCounts"
-import BookMarkButton from "../componennts/BookmarkButton"
-import AddComment from "../componennts/AddComment"
+import LikeButton from "../components/LikeButton"
+import SharedCount from "../components/SharedCounts"
+import BookMarkButton from "../components/BookmarkButton"
+import AddComment from "../components/AddComment"
 import {prisma} from '@/lib/prisma';
 import { Post } from "../lib/interface/post"
 
