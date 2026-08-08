@@ -1,5 +1,5 @@
 "use client"
-import { Post } from "@/app/lib/interface/post";
+import { Post } from "@/lib/interface/post";
 import { useState } from "react";
 
 export default function BookMarkButton({post}: {post: Post}){

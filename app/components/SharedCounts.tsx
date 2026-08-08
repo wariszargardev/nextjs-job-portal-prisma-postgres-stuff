@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { Post } from "@/app/lib/interface/post";
+import { Post } from "@/lib/interface/post";
 
 export default function SharedCount({post}: {post: Post}){
     const [sharedCounts, setSharedCounts] = useState(post.sharedCount)

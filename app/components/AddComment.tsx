@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react";
-import { Post } from "@/app/lib/interface/post";
+import { Post } from "@/lib/interface/post";
 
 export default function AddComment({post}: {post: Post}){
     const [commentCount, setCommentCount] = useState(post.commentCount)

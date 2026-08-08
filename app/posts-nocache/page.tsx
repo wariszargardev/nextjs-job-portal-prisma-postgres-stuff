@@ -4,7 +4,7 @@ import SharedCount from "../components/SharedCounts"
 import BookMarkButton from "../components/BookmarkButton"
 import AddComment from "../components/AddComment"
 import {prisma} from '@/lib/prisma';
-import { Post } from "../lib/interface/post"
+import { Post } from "../../lib/interface/post"
 
 // Fetching posts from database 
 export const dynamic = 'force-dynamic'  // Never cache this page

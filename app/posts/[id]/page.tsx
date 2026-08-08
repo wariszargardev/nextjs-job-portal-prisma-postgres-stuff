@@ -1,4 +1,4 @@
-import { posts } from "@/app/lib/post"
+import { posts } from "@/lib/post"
 import Link from "next/link"
 import { notFound } from "next/navigation";
 
