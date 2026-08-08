@@ -1,8 +1,10 @@
 export interface Post {
-    id: number,
+    id: number
     title: string
     description: string
-    sharedCount: number,
-    bookMark: boolean,
+    sharedCount: number
+    bookMark: boolean
     commentCount: number
-}
+    createdAt: Date
+    updatedAt: Date
+  }

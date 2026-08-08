@@ -78,3 +78,27 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+
+<!-- I change in schema -->
+
+pnpm run db:push to reflects changes in db
+
+pnpm pnpm prisma generate to update prisma conmfigutartion
+
+That's a stale generated type file in .next/dev/types — Next.js cached a type stub for an app/api/auth/[...nextauth]/route.ts that doesn't actually exist in your source tree anymore (only app/api/posts/route.ts exists now). Deleting the .next build cache and rebuilding will fix it.
+
+rm -rf .next && npm run build
+
+To test cache on local we need to run 
+npm run build
+
+Production Mode (npm run start):
+
+Cahche ma yeah hoga 
+
+console.log("🔍 Fetching posts from database...")
+const posts: Post[] = await prisma.post.findMany()
+console.log("✅ Posts fetched:", posts.length, "posts")
+
+Yeah dtaa cached hojy ga automaitc on server and even if ou added no rwil lreyrn latest dtaa in this way page run too falsr

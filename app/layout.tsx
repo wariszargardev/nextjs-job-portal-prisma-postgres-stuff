@@ -29,13 +29,14 @@ export default function RootLayout({
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col">
-      <nav className="bg-gray-100 p-4 flex gap-4">
-          <Link href="/">Home</Link>
-          <Link href="/posts">Posts</Link>
-          <Link href="/servervsclient">server vs client</Link>
-        </nav>
-
-        {children}
+        <nav className="bg-gray-100 p-4 flex gap-4">
+            <Link href="/">Home</Link>
+            <Link href="/posts">Posts Cache </Link>
+            <Link href="/posts-nocache">Posts No Cache </Link>
+            <Link href="/posts-cache-revalidate">Posts Revalidate </Link>
+            <Link href="/servervsclient">server vs client</Link>
+          </nav>
+          {children}
       </body>
     </html>
   );

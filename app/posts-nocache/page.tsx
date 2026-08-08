@@ -6,8 +6,11 @@ import AddComment from "../componennts/AddComment"
 import {prisma} from '@/lib/prisma';
 import { Post } from "../lib/interface/post"
 
+// Fetching posts from database 
+export const dynamic = 'force-dynamic'  // Never cache this page
+
 export default async function Posts(){
-    console.log("🔍 Fetching posts from database...")
+    console.log("🔄 [NO-CACHE] Fetching posts from database...")
     const posts: Post[] = await prisma.post.findMany()
     console.log("✅ Posts fetched:", posts.length, "posts")
 
