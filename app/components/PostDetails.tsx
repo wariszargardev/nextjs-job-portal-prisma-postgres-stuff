@@ -10,7 +10,7 @@ export default async function PostDetails({post}: {post: Post}){
         <div>
             <h1> Post Information</h1>
             {
-                <div key={post.id} className="mt-4 mb-4">
+                <div className="mt-4 mb-4">
                     <h1>{post.title}</h1>
                     <p>{post.description}</p>
                     <p>Shared Count: {post.sharedCount}</p>
