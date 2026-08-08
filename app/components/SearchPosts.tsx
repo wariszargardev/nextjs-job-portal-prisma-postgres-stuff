@@ -5,19 +5,30 @@ import PostDetails from "@/app/components/PostDetails"
 export default function SearchPosts ({posts}: {posts: Post[]}) {
     const [searchTerm, setSearchTerm] = useState("")
     const [filterPosts, setFilterPosts] = useState(posts)
+    const [errorMessage, setErrormessage] = useState('')
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const search = event.target.value
-        setSearchTerm(search)
-        console.log("search term ", search)
-        if(search){
-            setFilterPosts(posts.filter((post) =>post.title.toLowerCase().includes(search.toLowerCase()))) 
-        } else {
-            setFilterPosts(posts)
-        }
+        const searchValue = event.target.value
+        setSearchTerm(searchValue)
+        setErrormessage(getValidationMessage(searchValue))
+        setFilterPosts(getFilterPosts(searchValue))
+    }
+
+    const getValidationMessage = (value: string) => {
+        if (!value) return ""
+        if (value.length < 2) return "Type at least 2 characters"
+        if (value.length > 50) return "Search term too long (max 50)"
+        return ""
+    }
+
+    const getFilterPosts = (value: string) => {
+        if (!value) return posts
+        if (value.length < 2 || value.length > 50) return []
+        return posts.filter((post) => post.title.toLowerCase().includes(value.toLowerCase()))
     }
 
     const clearSearch = () => {
         setSearchTerm("")
+        setErrormessage("")
         setFilterPosts(posts)
     }
 
@@ -53,6 +64,7 @@ export default function SearchPosts ({posts}: {posts: Post[]}) {
             </div>
 
             {
+                errorMessage ? <p>{errorMessage}</p> :
                 filterPosts.length > 0 ? <>
                     {filterPosts.map((post: Post) => (
                         <PostDetails key={post.id} post={post} />
