@@ -5,7 +5,7 @@ import BookMarkButton from "./BookmarkButton"
 import AddComment from "./AddComment"
 import { Post } from "@/lib/interface/post"
 
-export default async function PostDetails({post}: {post: Post}){
+export default function PostDetails({post}: {post: Post}){
     return (
         <div className="rounded-xl border border-neutral-200 bg-white p-5 shadow-sm dark:border-neutral-800 dark:bg-neutral-900">
             <div className="flex items-start justify-between gap-3">
