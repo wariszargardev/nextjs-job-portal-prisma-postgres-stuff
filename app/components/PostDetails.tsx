@@ -19,6 +19,12 @@ export default function PostDetails({post}: {post: Post}){
                 <SharedCount post={post} />
                 <AddComment post={post} />
                 <Link
+                    href={`posts/${post.id}/edit`}
+                    className="ml-auto text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
+                >
+                    Edit 
+                </Link>
+                <Link
                     href={`posts/${post.id}`}
                     className="ml-auto text-sm font-medium text-blue-600 hover:underline dark:text-blue-400"
                 >
