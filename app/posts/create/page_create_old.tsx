@@ -2,32 +2,24 @@
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
-import { Post } from "@/lib/interface/post"
 
 type Status = "idle" | "submitting" | "success" | "error"
 
-interface PostFormProps {
-  post?: Post  
-}
-
-export default function PostForm({ post }: PostFormProps){
+export default function PostCreate(){
     const router = useRouter()
-    const [title, setTitle] = useState(post?.title || '')
-    const [description, setDescription] = useState(post?.description || '')
+    const [title, setTitle] = useState('')
+    const [description, setDescription] = useState('')
     const [errors, setErrors] = useState({
         title: "",
         description: ""
     })
-
-    const isEditMode = !!post // determine if we are in edit mode based on the presence of a post prop
-
     const [status, setStatus] = useState<Status>("idle")
     const [serverMessage, setServerMessage] = useState("")
 
     const submitForm = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
 
-        if (!isValidToSubmit ()) return
+        if (!isValidaToSubmit()) return
 
         setStatus("submitting")
         setServerMessage("")
@@ -37,20 +29,20 @@ export default function PostForm({ post }: PostFormProps){
             formData.set("title", title)
             formData.set("description", description)
 
-            const res = await fetch(isEditMode ? `/api/posts/${post.id}` : `/api/posts`, {
-                method: isEditMode ? "PUT" : "POST",
+            const res = await fetch('/api/posts', {
+                method: "POST",
                 body: formData
             })
             const result = await res.json()
 
             if (!res.ok) {
                 setStatus("error")
-                setServerMessage(result.error || isEditMode ? "Failed to update post" : "Failed to create post")
+                setServerMessage(result.error || "Failed to create post")
                 return
             }
 
             setStatus("success")
-            setServerMessage(isEditMode ? "Post updated successfully! Redirecting..." : "Post created successfully! Redirecting...")
+            setServerMessage("Post created successfully! Redirecting...")
             setTimeout(() => {
                 router.push('/posts')
             }, 900)
@@ -60,7 +52,7 @@ export default function PostForm({ post }: PostFormProps){
         }
     }
 
-    const isValidToSubmit  = () => {
+    const isValidaToSubmit = () => {
         const newErrors = {
             title: getTitleValidation(),
             description: getDescriptionValidation(),
@@ -95,9 +87,8 @@ export default function PostForm({ post }: PostFormProps){
             </Link>
 
             <div className="mb-8">
-                <h1 className="mt-1 text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">
-                    {isEditMode ? "Edit Post" : "Create Post"}
-                </h1>
+                <h1 className="mt-1 text-3xl font-bold tracking-tight text-neutral-900 dark:text-neutral-100">Create Post</h1>
+                <p className="mt-2 text-sm text-neutral-500 dark:text-neutral-400">Share something new with your readers.</p>
             </div>
 
             {status === "success" && (
@@ -118,9 +109,7 @@ export default function PostForm({ post }: PostFormProps){
                 <div>
                     <div className="mb-1 flex items-center justify-between">
                         <label className="block text-sm font-medium text-neutral-700 dark:text-neutral-300">Post Title</label>
-                        <span className={`text-xs ${title.length > 80 ? 'text-orange-500' : 'text-neutral-400'}`}>
-                            {title.length}/100
-                        </span>                    
+                        <span className="text-xs text-neutral-400 dark:text-neutral-500">{title.length}/100</span>
                     </div>
                     <input
                         value={title}
@@ -165,7 +154,7 @@ export default function PostForm({ post }: PostFormProps){
                     {isSubmitting && (
                         <span className="h-4 w-4 animate-spin rounded-full border-2 border-white/40 border-t-white" />
                     )}
-                    {isSubmitting ? isEditMode ? "Updating..." : "Creating..." : isEditMode ? "Update Post" : "Create Post"}
+                    {isSubmitting ? "Creating..." : "Create Post"}
                 </button>
             </form>
         </div>
