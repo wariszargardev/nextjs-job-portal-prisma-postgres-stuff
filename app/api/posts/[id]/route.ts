@@ -31,3 +31,21 @@ export const PUT = async (req: NextRequest,  { params }: { params: Promise<{ id:
         )
     }
 }
+
+export const DELETE = async (req: NextRequest,  { params }: { params: Promise<{ id: string }> }) => {
+    const {id} = await params
+    try {
+        const post = await prisma.post.delete({
+            where: {
+                id: parseInt(id)
+            }
+        })
+        revalidatePath(`/posts/`)  // Refresh cache NOW
+        return Response.json({ data: { post } })
+    } catch(e) {
+        return Response.json(
+            { error: "Failed to delete post" },
+            { status: 500 }
+        )
+    }
+}
