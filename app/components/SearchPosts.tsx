@@ -1,11 +1,16 @@
 "use client"
 import { Post } from "@/lib/interface/post"
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
 import PostDetails from "@/app/components/PostDetails"
 export default function SearchPosts ({posts}: {posts: Post[]}) {
     const [searchTerm, setSearchTerm] = useState("")
     const [filterPosts, setFilterPosts] = useState(posts)
     const [errorMessage, setErrormessage] = useState('')
+
+    useEffect(() => {
+        setFilterPosts(posts)
+    }, [posts])
+    
     const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
         const searchValue = event.target.value
         setSearchTerm(searchValue)

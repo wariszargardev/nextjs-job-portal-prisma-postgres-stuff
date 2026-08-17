@@ -32,6 +32,7 @@ export default function RootLayout({
         <nav className="bg-gray-100 p-4 flex gap-4">
             <Link href="/">Home</Link>
             <Link href="/posts">Posts Cache </Link>
+            <Link href="/useEffect">UseEffect </Link>
             <Link href="/posts-nocache">Posts No Cache </Link>
             <Link href="/posts-cache-revalidate">Posts Revalidate </Link>
             <Link href="/servervsclient">server vs client</Link>
