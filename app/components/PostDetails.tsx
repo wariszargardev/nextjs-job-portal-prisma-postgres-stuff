@@ -51,6 +51,7 @@ export default function PostDetails({post}: {post: Post}){
                 <BookMarkButton post={post} />
             </div>
             <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400">{post.description}</p>
+            <p className="mt-1.5 text-sm text-neutral-600 dark:text-neutral-400">{post.user?.name || "Unknown"}</p>
 
             <div className="mt-4 flex flex-wrap items-center gap-2 border-t border-neutral-100 pt-3 dark:border-neutral-800">
                 <LikeButton post={post} />

@@ -9,13 +9,15 @@ export default function SearchPosts () {
     const [error, setError] = useState<string | null>(null)
 
     useEffect(() => {
-        if (!searchTerm) {
-            setPosts([]) // Clear posts if search term is empty
-            setError(null)
-        }
+        let ignore = false
+
         if (searchTerm && (searchTerm.length < 3 || searchTerm.length > 50)) {
             setError('Search term must be between 3 and 50 characters')
+            setPosts([])
+            setLoading(false)
+            return
         }
+        setError(null)
          // Simulate an API call to fetch posts based on the search term
         const fetchPosts = async () => {
             try {
@@ -26,15 +28,25 @@ export default function SearchPosts () {
                 }
                 const data = await response.json()
                 console.log('Fetched posts:', data.posts) // Log the fetched data for debugging
-                setPosts(data.posts)
+                if (!ignore) {
+                    setPosts(data.posts)
+                }
             } catch (err) {
-                setError('Failed to fetch posts')
+                if (!ignore) {
+                    setError('Failed to fetch posts')
+                }
             } finally {
-                setLoading(false)
+                if (!ignore) {
+                    setLoading(false)
+                }
             }
         }
 
         fetchPosts()
+
+        return () => {
+            ignore = true
+        }
     }, [searchTerm])
     return (
         <div className="mb-6">

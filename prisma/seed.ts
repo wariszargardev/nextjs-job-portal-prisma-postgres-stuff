@@ -1,5 +1,25 @@
 import "dotenv/config";
+import { randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
+
+const users = [
+  {
+    id: randomUUID(),
+    email: "alice@example.com",
+    password: "password123",
+    name: "Alice Johnson",
+    role: "CANDIDATE" as const,
+    updatedAt: new Date(),
+  },
+  {
+    id: randomUUID(),
+    email: "bob@example.com",
+    password: "password123",
+    name: "Bob Smith",
+    role: "EMPLOYER" as const,
+    updatedAt: new Date(),
+  },
+];
 
 const posts = [
   {
@@ -54,7 +74,18 @@ const posts = [
 ];
 
 async function main() {
-  await prisma.post.createMany({ data: posts });
+  await prisma.post.deleteMany();
+  await prisma.user.deleteMany({ where: { email: { in: users.map((user) => user.email) } } });
+
+  await prisma.user.createMany({ data: users });
+  console.log(`Seeded ${users.length} users.`);
+
+  await prisma.post.createMany({
+    data: posts.map((post, index) => ({
+      ...post,
+      userId: users[index % users.length].id,
+    })),
+  });
   console.log(`Seeded ${posts.length} posts.`);
 }
 

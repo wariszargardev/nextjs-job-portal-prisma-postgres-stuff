@@ -94,6 +94,7 @@ model User {
   updatedAt      DateTime
   Job            Job[]
   JobApplication JobApplication[]
+  posts Post[]
 }
 
 enum AppStatus {
@@ -117,6 +118,11 @@ model Post {
   sharedCount  Int      @default(0)
   bookMark     Boolean  @default(false)
   commentCount Int      @default(0)
+
+  // Foreign key - connects to User
+  userId      String
+  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
 }

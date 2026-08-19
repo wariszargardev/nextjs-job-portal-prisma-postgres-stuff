@@ -9,6 +9,15 @@ export default async function Posts(){
     const posts: Post[] = await prisma.post.findMany({
         orderBy: {
             id: 'desc'
+        },
+        include: {
+            user: {
+                select: {
+                    id: true,
+                    name: true,
+                    email: true
+                }
+            }
         }
     })
     console.log("✅ Posts fetched:", posts.length, "posts")

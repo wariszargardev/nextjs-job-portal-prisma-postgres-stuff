@@ -10,7 +10,16 @@ export const GET = async (req: NextRequest) => {
     // If no search term, return all posts
     if (!searchTerm || searchTerm.length < 3 || searchTerm.length > 50) {
       const posts = await prisma.post.findMany({
-        orderBy: { createdAt: 'desc' }
+        include: {
+          user: {
+            select: {
+              id: true,
+              name: true,
+              email: true
+            }
+          }
+        },
+        orderBy: { createdAt: 'desc' },
       })
       return NextResponse.json({ posts })
     }
@@ -33,6 +42,15 @@ export const GET = async (req: NextRequest) => {
           }
         ]
       },
+      include: {
+        user: {
+          select: {
+            id: true,
+            name: true,
+            email: true
+          }
+        }
+      },
       orderBy: { createdAt: 'desc' }
     })
     
@@ -47,19 +65,24 @@ export const GET = async (req: NextRequest) => {
 
 export const POST = async (req: NextRequest) => {
     try {
-        const formData = await req.formData() 
-        const title = formData.get('title') as string
-        const description = formData.get('description') as string
+      const user = await prisma.user.findFirst()
+      const formData = await req.formData() 
+      const title = formData.get('title') as string
+      const description = formData.get('description') as string
 
-        if (!title || !description){
-            return Response.json({ error: "Title and description required" },{ status: 400 })
-        }
+      if (!title || !description){
+          return Response.json({ error: "Title and description required" },{ status: 400 })
+      }
 
-        const post = await prisma.post.create({
-            data: {
-                title: title,
-                description: description
-            }
+      const post = await prisma.post.create({
+          data: {
+              title: title,
+              description: description,
+              userId: user?.id || ""
+            },
+          include: {
+            user: true // Include user data in response
+          }
         })
         revalidatePath('/posts')  // Refresh cache NOW
         return Response.json({ data: { post } })
