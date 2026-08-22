@@ -1,22 +1,19 @@
 import "dotenv/config";
-import { randomUUID } from "crypto";
 import { prisma } from "@/lib/prisma";
 
 const users = [
   {
-    id: randomUUID(),
+    id: 1,
     email: "alice@example.com",
     password: "password123",
     name: "Alice Johnson",
-    role: "CANDIDATE" as const,
     updatedAt: new Date(),
   },
   {
-    id: randomUUID(),
+    id: 2,
     email: "bob@example.com",
     password: "password123",
     name: "Bob Smith",
-    role: "EMPLOYER" as const,
     updatedAt: new Date(),
   },
 ];

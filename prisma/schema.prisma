@@ -2,126 +2,33 @@ generator client {
   provider = "prisma-client"
   output   = "../app/generated/prisma"
 }
-
 datasource db {
   provider = "postgresql"
 }
 
-model DocumentType {
-  id                           BigInt     @id @default(autoincrement())
-  code                         String     @unique
-  text                         String
-  description                  String?
-  isActive                     Boolean    @default(true)
-  quoteTypeId                  Int?
-  folderPath                   String?
-  acceptedFiles                String?
-  maxFiles                     Int        @default(1)
-  maxSize                      Int        @default(5)
-  isRequired                   Boolean    @default(false)
-  sendToCustomer               Boolean    @default(false)
-  sortOrder                    Int?
-  receiveFromCustomer          Boolean    @default(false)
-  category                     String     @default("QUOTE")
-  isRequiredForSendPolicy      Boolean    @default(false)
-  businessTypeOfInsuranceId    BigInt?
-  businessTypeOfCustomer       String?
-  toolTip                      String?
-  registrationType             String?
-  vehicleUse                   String?
-  isRestrictedInternalDocument Boolean    @default(false)
-  QuoteType                    QuoteType? @relation(fields: [quoteTypeId], references: [id])
-
-  @@index([isActive])
-  @@index([quoteTypeId])
-}
-
-model Job {
-  id             String           @id
-  title          String
-  description    String
-  location       String
-  department     String?
-  isPublished    Boolean          @default(true)
-  employerId     String
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime
-  User           User             @relation(fields: [employerId], references: [id], onDelete: Cascade)
-  JobApplication JobApplication[]
-
-  @@index([isPublished])
-  @@index([location])
-}
-
-model JobApplication {
-  id          String    @id
-  jobId       String
-  candidateId String
-  status      AppStatus @default(PENDING)
-  coverNote   String?
-  resumePath  String?
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime
-  User        User      @relation(fields: [candidateId], references: [id], onDelete: Cascade)
-  Job         Job       @relation(fields: [jobId], references: [id], onDelete: Cascade)
-
-  @@unique([jobId, candidateId])
-}
-
-model QuoteType {
-  id           Int            @id @default(autoincrement())
-  shortCode    String?
-  code         String?
-  text         String?
-  textAr       String?
-  isActive     Boolean        @default(true)
-  sortOrder    Int?
-  isDeleted    Boolean        @default(false)
-  createdAt    DateTime       @default(now())
-  updatedAt    DateTime
-  DocumentType DocumentType[]
-
-  @@index([isActive])
-}
-
 model User {
-  id             String           @id
+  id             Int              @id @default(autoincrement())
   email          String           @unique
   password       String
   name           String
-  role           Role
+
+  // All relationships mentioned below
+  posts         Post[]
+
   createdAt      DateTime         @default(now())
-  updatedAt      DateTime
-  Job            Job[]
-  JobApplication JobApplication[]
-  posts Post[]
-}
-
-enum AppStatus {
-  PENDING
-  REVIEWING
-  SHORTLISTED
-  REJECTED
-  HIRED
-}
-
-enum Role {
-  EMPLOYER
-  CANDIDATE
-  ADMIN
+  updatedAt      DateTime         @default(now())
 }
 
 model Post {
-  id           Int      @id @default(autoincrement())
+  id             Int              @id @default(autoincrement())
   title        String
   description  String
   sharedCount  Int      @default(0)
   bookMark     Boolean  @default(false)
   commentCount Int      @default(0)
-
-  // Foreign key - connects to User
-  userId      String
-  user        User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId       Int
+  // All relationships mentioned below
+  user         User   @relation(fields: [userId], references: [id])
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())

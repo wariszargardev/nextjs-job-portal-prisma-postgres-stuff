@@ -6,9 +6,9 @@ export interface Post {
     bookMark: boolean
     commentCount: number
     createdAt: Date
-    updatedAt: Date,
+    updatedAt: Date
     user?: {
-        id: string
+        id: number
         name: string
         email: string
     }

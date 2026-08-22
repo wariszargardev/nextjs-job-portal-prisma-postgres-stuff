@@ -1,6 +1,7 @@
 import {prisma} from '@/lib/prisma';
 import { revalidatePath } from 'next/cache';
 import { NextRequest, NextResponse } from 'next/server';
+import { userSelectionFields, userSelectionFields as UserSelectionFields } from '@/lib/constants/userSelectionFields';
 
 export const GET = async (req: NextRequest) => {
   try {
@@ -11,13 +12,9 @@ export const GET = async (req: NextRequest) => {
     if (!searchTerm || searchTerm.length < 3 || searchTerm.length > 50) {
       const posts = await prisma.post.findMany({
         include: {
-          user: {
-            select: {
-              id: true,
-              name: true,
-              email: true
+            user: {
+              select: UserSelectionFields
             }
-          }
         },
         orderBy: { createdAt: 'desc' },
       })
@@ -70,7 +67,7 @@ export const POST = async (req: NextRequest) => {
       const title = formData.get('title') as string
       const description = formData.get('description') as string
 
-      if (!title || !description){
+      if (!title || !description || !user){
           return Response.json({ error: "Title and description required" },{ status: 400 })
       }
 
@@ -78,10 +75,12 @@ export const POST = async (req: NextRequest) => {
           data: {
               title: title,
               description: description,
-              userId: user?.id || ""
+              userId: user.id
             },
           include: {
-            user: true // Include user data in response
+            user: {
+              select: userSelectionFields
+            }
           }
         })
         revalidatePath('/posts')  // Refresh cache NOW
