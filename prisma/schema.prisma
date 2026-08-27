@@ -14,6 +14,7 @@ model User {
 
   // All relationships mentioned below
   posts         Post[]
+  comments      Comment[]
 
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @default(now())
@@ -29,7 +30,22 @@ model Post {
   userId       Int
   // All relationships mentioned below
   user         User   @relation(fields: [userId], references: [id])
+  comments     Comment[]
 
   createdAt    DateTime @default(now())
   updatedAt    DateTime @default(now())
+}
+
+model Comment {
+  id          Int      @id @default(autoincrement())
+  content     String
+  postId      Int
+  userId      Int
+
+  // All relationships mentioned below
+  post        Post     @relation(fields: [postId], references: [id])
+  user        User     @relation(fields: [userId], references: [id])
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @default(now())
 }

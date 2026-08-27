@@ -6,7 +6,9 @@ import LikeButton from "./LikeButton"
 import SharedCount from "./SharedCounts"
 import BookMarkButton from "./BookmarkButton"
 import AddComment from "./AddComment"
+import CommentsListing from "./comments/lisiting"
 import { Post } from "@/lib/interface/post"
+import { Comment } from "@/lib/interface/comment"
 
 function initials(name?: string) {
     if (!name) return "?"
@@ -28,6 +30,7 @@ function formatDate(date: Date) {
 
 export default function PostDetailView({ post }: { post: Post }) {
     const router = useRouter()
+    const [comments, setComments] = useState<Comment[]>(post.comments ?? [])
     const [showDeleteModal, setShowDeleteModal] = useState(false)
     const [isDeleting, setIsDeleting] = useState(false)
     const [deleteError, setDeleteError] = useState("")
@@ -117,26 +120,20 @@ export default function PostDetailView({ post }: { post: Post }) {
             </article>
 
             <section className="rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm sm:p-9 dark:border-neutral-800 dark:bg-neutral-900">
-                <div className="flex items-center justify-between gap-4">
+                <div className="flex flex-wrap items-center justify-between gap-4">
                     <h2 className="flex items-center gap-2 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
                         💬 Comments
                         <span className="rounded-full bg-neutral-100 px-2 py-0.5 text-xs font-medium text-neutral-500 dark:bg-neutral-800 dark:text-neutral-400">
-                            {post.commentCount}
+                            {comments.length}
                         </span>
                     </h2>
-                    <AddComment post={post} />
+                    <AddComment
+                        post={post}
+                        onCommentAdded={(comment) => setComments((prev) => [comment, ...prev])}
+                    />
                 </div>
 
-                {/* Future: comment list renders here */}
-                <div className="mt-6 flex flex-col items-center justify-center rounded-2xl border border-dashed border-neutral-200 py-10 text-center dark:border-neutral-800">
-                    <span className="text-2xl">🗨️</span>
-                    <p className="mt-2 text-sm font-medium text-neutral-500 dark:text-neutral-400">
-                        No comments yet
-                    </p>
-                    <p className="mt-1 text-xs text-neutral-400 dark:text-neutral-500">
-                        Be the first to share your thoughts.
-                    </p>
-                </div>
+                <CommentsListing comments={comments} />
             </section>
 
             {showDeleteModal && (

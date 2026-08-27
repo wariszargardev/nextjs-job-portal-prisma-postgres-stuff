@@ -1,3 +1,5 @@
+import { Comment } from "@/lib/interface/comment"
+
 export interface Post {
     id: number
     title: string
@@ -11,5 +13,9 @@ export interface Post {
         id: number
         name: string
         email: string
+    }
+    comments?: Comment[]
+    _count?: {
+        comments: number
     }
 }

@@ -21,8 +21,22 @@ export default async function PostInfo({
                     email: true,
                 },
             },
-        },
+            comments: {
+                include: {
+                    user: true
+                },
+                orderBy: {
+                    createdAt: "desc"
+                }
+            },
+            _count: {
+                select: {
+                    comments: true
+                }
+            }
+        }
     })
+    console.log(post)
     if(!post){
         return notFound()
     }
