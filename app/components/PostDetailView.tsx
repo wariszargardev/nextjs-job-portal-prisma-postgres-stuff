@@ -133,7 +133,15 @@ export default function PostDetailView({ post }: { post: Post }) {
                     />
                 </div>
 
-                <CommentsListing comments={comments} />
+                <CommentsListing
+                    comments={comments}
+                    onCommentUpdated={(updated) =>
+                        setComments((prev) => prev.map((c) => (c.id === updated.id ? updated : c)))
+                    }
+                    onCommentDeleted={(commentId) =>
+                        setComments((prev) => prev.filter((c) => c.id !== commentId))
+                    }
+                />
             </section>
 
             {showDeleteModal && (
